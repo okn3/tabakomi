@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify
 import pymysql.cursors
 
 app = Flask(__name__)
@@ -23,6 +23,35 @@ def register_user():
     conn.commit()
     conn.close()
     return request.form['email'] + request.form['password']
+
+@app.route('/post_location', methods=["POST"])
+def post_location():
+    conn = connect_db()
+    cur = conn.cursor()
+
+    cur.execute("INSERT INTO `locations` (`user_id`, `position`) VALUES (%s, GeomFromText('POINT(" + request.form['lat'] + " " + request.form['lng'] + ")'))", (request.form['user_id']))
+
+    cur.close()
+    conn.commit()
+    conn.close
+    return 'success'
+
+@app.route('/get_near_locations', methods=["GET"])
+def get_near_locations():
+    conn = connect_db()
+    cur = conn.cursor()
+
+    #cur.execute("SELECT `user_id`, `position` FROM `locations` WHERE ST_Intersects(`position`, Buffer(POINT(35, 139), 2))")
+
+    cur.execute("SELECT user_id, X(position) as lat, Y(position) as lng from locations where MBRContains(GeomFromText('LINESTRING(36.00 130.00, 34.00 140.00)'), position)")
+    result = cur.fetchall()
+    print(type(result), type(result[0]))
+    for raw in result:
+        print (raw)
+    cur.close()
+    conn.commit()
+    conn.close()
+    return jsonify(locations=result)
 
 @app.route('/test_db')
 def test_db():
