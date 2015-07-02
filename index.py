@@ -48,9 +48,8 @@ def post_location():
     conn = connect_db()
     cur = conn.cursor()
     cur.execute("update `locations` set position = GeomFromText('POINT(" + request.form['lat'] + " " + request.form['lng'] + ")') where user_id=%s", request.form['user_id'])
-    cur.commit()
-    cur.close()
     conn.commit()
+    cur.close()
     conn.close
 
     #一旦コメントアウト to Shimoyan from Say
@@ -98,13 +97,20 @@ def yahho_push():
     return request.form['name'] + request.form['positon'] + request.form['pushing_user_id'],request.form['pushed_user_id']
 
 
+HOST = '133.2.37.129'
+# HOST = 'localhost'
+USER = 'tabakomi'
+PASSWD = 'tabakomitabakomi'
+DB = 'tabakomi'
+CHARSET = 'utf8'
+
+
 def connect_db():
-    return pymysql.connect(host='133.2.37.129',
-                           # host='localhost',
-                           user='tabakomi',
-                           passwd='tabakomitabakomi',
-                           db='tabakomi',
-                           charset='utf8',
+    return pymysql.connect(host=HOST,
+                           user=USER,
+                           passwd=PASSWD,
+                           db=DB,
+                           charset=CHARSET,
                            cursorclass=pymysql.cursors.DictCursor)
 
 
