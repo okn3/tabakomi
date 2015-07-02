@@ -87,14 +87,12 @@ def get_near_location_users():
 def yahho_push():
     conn = connect_db()
     cur = conn.cursor()
-
-    cur.execute("INSERT INTO `yahhos` (`name`, `positon`,'pushing_user_id','pushed_user_id') VALUES (%s, GeomFromText('POINT(137.10 35.20)'),%s,%s)", (request.form['name'],
-                     request.form['pushed_user_id'],request.form['pushed_user_id']))
+    cur.execute("INSERT INTO yahhos (name, position,pushing_user_id,pushed_user_id) VALUES (%s, GeomFromText('POINT(" + request.form['lat'] + " " + request.form['lng'] + ")')," + request.form['pushing_user_id'] + "," + request.form['pushed_user_id'] + ")", request.form['name'])
 
     cur.close()
     conn.commit()
     conn.close()
-    return request.form['name'] + request.form['positon'] + request.form['pushing_user_id'],request.form['pushed_user_id']
+    return "success"
 
 
 HOST = '133.2.37.129'
