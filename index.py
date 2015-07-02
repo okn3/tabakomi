@@ -8,9 +8,11 @@ app = Flask(__name__)
 def hello_world():
     return 'Hello World!'
 
+
 @app.route('/user_form')
 def user_form():
     return render_template('form.html')
+
 
 @app.route('/get_user', methods=["POST"])
 def get_user():
@@ -25,42 +27,47 @@ def get_user():
     conn.close()
     return result["email"]
 
+
 @app.route('/register_user', methods=["POST"])
 def register_user():
     conn = connect_db()
     cur = conn.cursor()
-
     cur.execute("INSERT INTO `users` (`email`, `password`) VALUES (%s, %s)", (request.form['email'], request.form['password']))
-
+    conn.commit()
+    cur.execute("SELECT id FROM users WHERE email = '" + request.form['email'] + "'")
+    user = cur.fetchone()
+    cur.execute("INSERT INTO `locations` (`user_id`, `position`) VALUES (%s, GeomFromText('POINT(0 0)'))", user['id'])
     cur.close()
     conn.commit()
     conn.close()
-    return request.form['email'] + request.form['password']
+    return jsonify(status='success', user_id=user['id'])
+
 
 @app.route('/post_location', methods=["POST"])
 def post_location():
     conn = connect_db()
     cur = conn.cursor()
-
-    cur.execute("INSERT INTO `locations` (`user_id`, `position`) VALUES (%s, GeomFromText('POINT(" + request.form['lat'] + " " + request.form['lng'] + ")'))", (request.form['user_id']))
-
+    # cur.execute("INSERT INTO `locations` (`user_id`, `position`) VALUES (%s, GeomFromText('POINT(" + request.form['lat'] + " " + request.form['lng'] + ")'))", (request.form['user_id']))
+    cur.execute("update `locations` set position = GeomFromText('POINT(" + request.form['lat'] + " " + request.form['lng'] + ")') where user_id=%s", request.form['user_id'])
     cur.close()
     conn.commit()
     conn.close
 
-    conn = connect_db()
-    cur = conn.cursor()
+    #一旦コメントアウト to Shimoyan from Say
+    #conn = connect_db()
+    #cur = conn.cursor()
 
-    cur.execute("SELECT * FROM yahhos WHERE pushed_user_id = " + request.form['user_id'])
+    #cur.execute("SELECT * FROM yahhos WHERE pushed_user_id = " + request.form['user_id'])
 
-    cur.close()
-    conn.commit()
-    conn.close
+    # cur.close()
+    # conn.commit()
+    # conn.close
 
-    return 'success'
+    return jsonify(status='success')
 
-@app.route('/get_near_locations', methods=["GET"])
-def get_near_locations():
+
+@app.route('/get_near_location_users', methods=["GET"])
+def get_near_location_users():
     conn = connect_db()
     cur = conn.cursor()
 
@@ -68,13 +75,14 @@ def get_near_locations():
 
     cur.execute("SELECT user_id, X(position) as lat, Y(position) as lng from locations where MBRContains(GeomFromText('LINESTRING(36.00 130.00, 34.00 140.00)'), position)")
     result = cur.fetchall()
-    print(type(result), type(result[0]))
-    for raw in result:
-        print (raw)
+    # print(type(result), type(result[0]))
+    # for raw in result:
+        # print (raw)
     cur.close()
     conn.commit()
     conn.close()
     return jsonify(locations=result)
+
 
 @app.route('/yahho_push', methods=["POST"])
 def yahho_push():
@@ -90,24 +98,9 @@ def yahho_push():
     return request.form['name'] + request.form['positon'] + request.form['pushing_user_id'],request.form['pushed_user_id']
 
 
-
-
-@app.route('/test_db')
-def test_db():
-    # Connect to the database
-    conn = connect_db()
-    cur = conn.cursor()
-
-    cur.execute("INSERT INTO `users` (`email`, `password`) VALUES ('test', 'test')")
-
-    cur.close()
-    conn.commit()
-    conn.close()
-    return 'TEST DB!'
-
-
 def connect_db():
     return pymysql.connect(host='133.2.37.129',
+                           # host='localhost',
                            user='tabakomi',
                            passwd='tabakomitabakomi',
                            db='tabakomi',
@@ -117,3 +110,4 @@ def connect_db():
 
 if __name__ == '__main__':
     app.run(host='localhost', port=8080, debug=True)
+    # app.run()
