@@ -12,6 +12,19 @@ def hello_world():
 def user_form():
     return render_template('form.html')
 
+@app.route('/get_user', methods=["POST"])
+def get_user():
+    conn = connect_db()
+    cur = conn.cursor()
+
+    cur.execute("SELECT id, email from users where " + request.form['id'] + " = id")
+    result = cur.fetchone()
+
+    cur.close()
+    conn.commit()
+    conn.close()
+    return result["email"]
+
 @app.route('/register_user', methods=["POST"])
 def register_user():
     conn = connect_db()
