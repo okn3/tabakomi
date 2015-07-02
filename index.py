@@ -34,6 +34,16 @@ def post_location():
     cur.close()
     conn.commit()
     conn.close
+
+    conn = connect_db()
+    cur = conn.cursor()
+
+    cur.execute("SELECT * FROM yahhos WHERE pushed_user_id = " + request.form['user_id'])
+
+    cur.close()
+    conn.commit()
+    conn.close
+
     return 'success'
 
 @app.route('/get_near_locations', methods=["GET"])
@@ -52,6 +62,22 @@ def get_near_locations():
     conn.commit()
     conn.close()
     return jsonify(locations=result)
+
+@app.route('/yahho_push', methods=["POST"])
+def yahho_push():
+    conn = connect_db()
+    cur = conn.cursor()
+
+    cur.execute("INSERT INTO `yahhos` (`name`, `positon`,'pushing_user_id','pushed_user_id') VALUES (%s, GeomFromText('POINT(137.10 35.20)'),%s,%s)", (request.form['name'],
+                     request.form['pushed_user_id'],request.form['pushed_user_id']))
+
+    cur.close()
+    conn.commit()
+    conn.close()
+    return request.form['name'] + request.form['positon'] + request.form['pushing_user_id'],request.form['pushed_user_id']
+
+
+
 
 @app.route('/test_db')
 def test_db():
