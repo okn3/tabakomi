@@ -47,8 +47,8 @@ def register_user():
 def post_location():
     conn = connect_db()
     cur = conn.cursor()
-    # cur.execute("INSERT INTO `locations` (`user_id`, `position`) VALUES (%s, GeomFromText('POINT(" + request.form['lat'] + " " + request.form['lng'] + ")'))", (request.form['user_id']))
     cur.execute("update `locations` set position = GeomFromText('POINT(" + request.form['lat'] + " " + request.form['lng'] + ")') where user_id=%s", request.form['user_id'])
+    cur.commit()
     cur.close()
     conn.commit()
     conn.close
