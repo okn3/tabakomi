@@ -65,14 +65,14 @@ def post_location():
     return jsonify(status='success')
 
 
-@app.route('/get_near_location_users', methods=["GET"])
+@app.route('/get_near_location_users', methods=["POST"])
 def get_near_location_users():
     conn = connect_db()
     cur = conn.cursor()
 
     #cur.execute("SELECT `user_id`, `position` FROM `locations` WHERE ST_Intersects(`position`, Buffer(POINT(35, 139), 2))")
 
-    cur.execute("SELECT user_id, X(position) as lat, Y(position) as lng from locations where MBRContains(GeomFromText('LINESTRING(36.00 130.00, 34.00 140.00)'), position)")
+    cur.execute("SELECT user_id, X(position) as lat, Y(position) as lng from locations where MBRContains(GeomFromText('LINESTRING(" + request.form['lat'] +" " + request.form['lng'] + ","  +  request.form['lat'] + " " + request.form['lng'] + ")'), position)")
     result = cur.fetchall()
     # print(type(result), type(result[0]))
     # for raw in result:
