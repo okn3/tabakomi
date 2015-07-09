@@ -76,12 +76,8 @@ def get_near_location_users():
     lng1 = str(float(request.form['lng']) - RANGE)
     lat2 = str(float(request.form['lat']) - RANGE)
     lng2 = str(float(request.form['lng']) + RANGE)
-    print("SELECT user_id, Y(position) as lat, X(position) as lng from locations where MBRContains(GeomFromText('LINESTRING(" + lng1 +" " + lat1 + ","  +  lng2 + " " + lat2 + ")'), position)")
     cur.execute("SELECT user_id, Y(position) as lat, X(position) as lng from locations where MBRContains(GeomFromText('LINESTRING(" + lng1 +" " + lat1 + ","  +  lng2 + " " + lat2 + ")'), position)")
     result = cur.fetchall()
-    # print(type(result), type(result[0]))
-    # for raw in result:
-        # print (raw)
     cur.close()
     conn.commit()
     conn.close()
