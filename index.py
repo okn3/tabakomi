@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, request, jsonify
 import pymysql.cursors
 
 app = Flask(__name__)
@@ -17,14 +17,14 @@ def get_user():
     cur = conn.cursor()
 
     cur.execute("SELECT id, name from users where " + request.form['user_id'] + " = id")
-    r = cur.fetchone()
+    result = cur.fetchone()
 
     cur.close()
     conn.commit()
     conn.close()
-    if r is None:
+    if result is None:
         return jsonify(result='')
-    return jsonify(result=dict(id=r['id'], name=r['name'].decode('utf-8')))
+    return jsonify(result=result)
 
 
 @app.route('/register_user', methods=["POST"])
@@ -76,7 +76,7 @@ def get_near_location_users():
     lng1 = str(float(request.form['lng']) - RANGE)
     lat2 = str(float(request.form['lat']) - RANGE)
     lng2 = str(float(request.form['lng']) + RANGE)
-    cur.execute("SELECT user_id, Y(position) as lat, X(position) as lng from locations where user_id != " + request.form['user_id'] + " and MBRContains(GeomFromText('LINESTRING(" + lng1 +" " + lat1 + ","  +  lng2 + " " + lat2 + ")'), position)")
+    cur.execute("SELECT name, user_id, Y(position) as lat, X(position) as lng from locations LEFT JOIN users ON locations.user_id = users.id where user_id != " + request.form['user_id'] + " and MBRContains(GeomFromText('LINESTRING(" + lng1 +" " + lat1 + ","  +  lng2 + " " + lat2 + ")'), position)")
     result = cur.fetchall()
     cur.close()
     conn.commit()

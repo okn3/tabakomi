@@ -106,18 +106,10 @@ pip3 install PyMySQL3
 
 ```js
 {
-    "locations": [
-        {
-            "lat": 39, 
-            "lng": 140, 
-            "user_id": 1
-        }, 
-        {
-            "lat": 39, 
-            "lng": 140, 
-            "user_id": 100
-        }
-    ]
+	"locations":[
+		{"lat": 39, "lng": 140, "name": "fuga", "user_id": 1},
+		{"lat": 39, "lng": 140, "name": "piyo", "user_id": 100}
+	]
 }
 ```
 
