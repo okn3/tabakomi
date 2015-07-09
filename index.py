@@ -3,6 +3,8 @@ import pymysql.cursors
 
 app = Flask(__name__)
 
+RANGE = 0.001
+
 
 @app.route('/')
 def hello_world():
@@ -47,7 +49,7 @@ def register_user():
 def post_location():
     conn = connect_db()
     cur = conn.cursor()
-    cur.execute("update `locations` set position = GeomFromText('POINT(" + request.form['lat'] + " " + request.form['lng'] + ")') where user_id=%s", request.form['user_id'])
+    cur.execute("update `locations` set position = GeomFromText('POINT(" + request.form['lng'] + " " + request.form['lat'] + ")') where user_id=%s", request.form['user_id'])
     conn.commit()
     cur.close()
     conn.close
@@ -70,9 +72,12 @@ def get_near_location_users():
     conn = connect_db()
     cur = conn.cursor()
 
-    #cur.execute("SELECT `user_id`, `position` FROM `locations` WHERE ST_Intersects(`position`, Buffer(POINT(35, 139), 2))")
-
-    cur.execute("SELECT user_id, X(position) as lat, Y(position) as lng from locations where MBRContains(GeomFromText('LINESTRING(" + request.form['lat'] +" " + request.form['lng'] + ","  +  request.form['lat'] + " " + request.form['lng'] + ")'), position)")
+    lat1 = str(float(request.form['lat']) + RANGE)
+    lng1 = str(float(request.form['lng']) - RANGE)
+    lat2 = str(float(request.form['lat']) - RANGE)
+    lng2 = str(float(request.form['lng']) + RANGE)
+    print("SELECT user_id, Y(position) as lat, X(position) as lng from locations where MBRContains(GeomFromText('LINESTRING(" + lng1 +" " + lat1 + ","  +  lng2 + " " + lat2 + ")'), position)")
+    cur.execute("SELECT user_id, Y(position) as lat, X(position) as lng from locations where MBRContains(GeomFromText('LINESTRING(" + lng1 +" " + lat1 + ","  +  lng2 + " " + lat2 + ")'), position)")
     result = cur.fetchall()
     # print(type(result), type(result[0]))
     # for raw in result:
