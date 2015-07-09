@@ -11,38 +11,35 @@ def hello_world():
     return 'Hello World!'
 
 
-@app.route('/user_form')
-def user_form():
-    return render_template('form.html')
-
-
 @app.route('/get_user', methods=["POST"])
 def get_user():
     conn = connect_db()
     cur = conn.cursor()
 
-    cur.execute("SELECT id, email from users where " + request.form['id'] + " = id")
-    result = cur.fetchone()
+    cur.execute("SELECT id, name from users where " + request.form['user_id'] + " = id")
+    r = cur.fetchone()
 
     cur.close()
     conn.commit()
     conn.close()
-    return result["email"]
+    if r is None:
+        return jsonify(result='')
+    return jsonify(result=dict(id=r['id'], name=r['name'].decode('utf-8')))
 
 
 @app.route('/register_user', methods=["POST"])
 def register_user():
     conn = connect_db()
     cur = conn.cursor()
-    cur.execute("INSERT INTO `users` (`email`, `password`) VALUES (%s, %s)", (request.form['email'], request.form['password']))
+    cur.execute("INSERT INTO users (name, password) VALUES ('" + request.form['name'] + "', '" + request.form['password'] + "')")
     conn.commit()
-    cur.execute("SELECT id FROM users WHERE email = '" + request.form['email'] + "'")
+    cur.execute("SELECT id FROM users WHERE name = '" + request.form['name'] + "' and password = '" + request.form['password'] + "'")
     user = cur.fetchone()
     cur.execute("INSERT INTO `locations` (`user_id`, `position`) VALUES (%s, GeomFromText('POINT(0 0)'))", user['id'])
     cur.close()
     conn.commit()
     conn.close()
-    return jsonify(status='success', user_id=user['id'])
+    return jsonify(user_id=user['id'])
 
 
 @app.route('/post_location', methods=["POST"])
@@ -54,7 +51,6 @@ def post_location():
     cur.close()
     conn.close
 
-    #一旦コメントアウト to Shimoyan from Say
     conn = connect_db()
     cur = conn.cursor()
 
@@ -65,10 +61,10 @@ def post_location():
     conn.commit()
     conn.close
 
-    if result != None :
-        return jsonify(result = result)
+    if result is not None:
+        return jsonify(result=result)
     else:
-        return jsonify(result = "")
+        return jsonify(result="")
 
 
 @app.route('/get_near_location_users', methods=["POST"])
@@ -80,24 +76,28 @@ def get_near_location_users():
     lng1 = str(float(request.form['lng']) - RANGE)
     lat2 = str(float(request.form['lat']) - RANGE)
     lng2 = str(float(request.form['lng']) + RANGE)
-    cur.execute("SELECT user_id, Y(position) as lat, X(position) as lng from locations where MBRContains(GeomFromText('LINESTRING(" + lng1 +" " + lat1 + ","  +  lng2 + " " + lat2 + ")'), position)")
+    cur.execute("SELECT user_id, Y(position) as lat, X(position) as lng from locations where user_id != " + request.form['user_id'] + " and MBRContains(GeomFromText('LINESTRING(" + lng1 +" " + lat1 + ","  +  lng2 + " " + lat2 + ")'), position)")
     result = cur.fetchall()
     cur.close()
     conn.commit()
     conn.close()
+    print(result)
     return jsonify(locations=result)
 
 
-@app.route('/yahho_push', methods=["POST"])
-def yahho_push():
+@app.route('/push_yahho', methods=["POST"])
+def push_yahho():
     conn = connect_db()
     cur = conn.cursor()
-    cur.execute("INSERT INTO yahhos (name, position,pushing_user_id,pushed_user_id) VALUES (%s, GeomFromText('POINT(" + request.form['lat'] + " " + request.form['lng'] + ")')," + request.form['pushing_user_id'] + "," + request.form['pushed_user_id'] + ")", request.form['name'])
+    cur.execute("SELECT id, name from users where " + request.form['pushing_user_id'] + " = id")
+    r = cur.fetchone()
+
+    cur.execute("INSERT INTO yahhos (name, position,pushing_user_id,pushed_user_id) VALUES (%s, GeomFromText('POINT(" + request.form['lat'] + " " + request.form['lng'] + ")')," + request.form['pushing_user_id'] + "," + request.form['pushed_user_id'] + ")", r['name'])
 
     cur.close()
     conn.commit()
     conn.close()
-    return "success"
+    return jsonify(status='success')
 
 
 HOST = '133.2.37.129'
