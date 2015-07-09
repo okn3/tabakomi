@@ -55,16 +55,20 @@ def post_location():
     conn.close
 
     #一旦コメントアウト to Shimoyan from Say
-    #conn = connect_db()
-    #cur = conn.cursor()
+    conn = connect_db()
+    cur = conn.cursor()
 
-    #cur.execute("SELECT * FROM yahhos WHERE pushed_user_id = " + request.form['user_id'])
+    cur.execute("SELECT * , X(position) AS lng, Y(position) AS lat FROM yahhos WHERE pushed_user_id = " + request.form['user_id'])
+    result = cur.fetchone()
 
-    # cur.close()
-    # conn.commit()
-    # conn.close
+    cur.close()
+    conn.commit()
+    conn.close
 
-    return jsonify(status='success')
+    if result != None :
+        return jsonify(result = result)
+    else:
+        return jsonify(result = "")
 
 
 @app.route('/get_near_location_users', methods=["POST"])
