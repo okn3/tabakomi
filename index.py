@@ -16,7 +16,7 @@ def get_user():
     conn = connect_db()
     cur = conn.cursor()
 
-    cur.execute("SELECT id, name from users where " + request.form['user_id'] + " = id")
+    cur.execute("SELECT id, name, twitter, comment from users where " + request.form['user_id'] + " = id")
     result = cur.fetchone()
 
     cur.close()

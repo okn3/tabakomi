@@ -24,7 +24,9 @@ pip3 install PyMySQL3
 {
 	"result":{
 		"id": 53,
-		"name": "hogee"
+		"name": "hogee",
+		"twitter": "taka_say",
+		"comment": "hello world!"
 	}
 }
 ```
