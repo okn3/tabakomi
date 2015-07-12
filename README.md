@@ -54,6 +54,25 @@ pip3 install PyMySQL3
 ```
 
 
+## /register_user
+プロフィール登録（TwitterID, Comment）
+
+|   key   | explanation  |
+| :-----: | :----------: |
+| user_id |   自分のID   |
+| twitter |  twitterのID（ない場合は空） |
+| comment | 一言コメント（ない場合は空） |
+
+
+返り値例
+
+```js
+{
+	"status": "success"
+}
+```
+
+
 ## /post_location
 位置情報送信（バックグラウンドで行うやつ）  
 **およびYahhoの確認**

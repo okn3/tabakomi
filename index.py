@@ -42,6 +42,26 @@ def register_user():
     return jsonify(user_id=user['id'])
 
 
+@app.route('/register_profile', methods=["POST"])
+def register_profile():
+    conn = connect_db()
+    cur = conn.cursor()
+    if request.form['twitter'] is not None:
+        twitter = request.form['twitter']
+    else:
+        twitter = ''
+    if request.form['comment'] is not None:
+        comment = request.form['comment']
+    else:
+        comment = ''
+    cur.execute("UPDATE users SET twitter = %s, comment = %s WHERE id = %s",
+                (twitter, comment, request.form['user_id']))
+    conn.commit()
+    cur.close()
+    conn.close
+    return jsonify(status='success')
+
+
 @app.route('/post_location', methods=["POST"])
 def post_location():
     conn = connect_db()
