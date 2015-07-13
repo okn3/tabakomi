@@ -193,7 +193,7 @@ Yahho送信
 ```
 
 
-## /set_tags
+## /set_tag
 タグの登録
 
 | key | explanation |
@@ -209,7 +209,7 @@ Yahho送信
 }
 ```
 
-## /remove_tags
+## /remove_tag
 登録したTagの削除  
 
 | key | explanation |
