@@ -1,6 +1,5 @@
 from flask import Flask, request, jsonify
 import pymysql.cursors
-from constants import TAGS
 
 app = Flask(__name__)
 
@@ -160,6 +159,8 @@ def remove_tag():
     conn.close()
     return jsonify(status='success')
 
+TAGS = ['スポーツ', 'ゲーム', 'ラーメン', '車', 'バイク', 'タバコ', 'IT',
+        'アニメ', 'ルイズ', 'ゼロの使い魔']
 
 HOST = '133.2.37.129'
 # HOST = 'localhost'
