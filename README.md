@@ -56,7 +56,7 @@ pip3 install PyMySQL3
 ```
 
 
-## /register_user
+## /register_profile
 プロフィール登録（TwitterID, Comment）
 
 |   key   | explanation  |
@@ -161,3 +161,66 @@ Yahho送信
 ```
 
 
+## /get_tags
+設定可能なTagの一覧と、登録したユーザーのタグ取得
+
+
+| key | explanation |
+|:-----------:|:------------:|
+| user_id       |  自分のID |
+
+返り値
+
+```js
+{
+	"tags":[
+		"スポーツ",
+		"ゲーム",
+		"ラーメン",
+		"車",
+		"バイク",
+		"タバコ",
+		"IT",
+		"アニメ",
+		"ルイズ",
+		"ゼロの使い魔"
+	],
+	"user_tags":[
+		"スポーツ",
+		"ゼロの使い魔"
+	]
+}
+```
+
+
+## /set_tags
+タグの登録
+
+| key | explanation |
+|:-----------:|:------------:|
+| user_id       |  自分のID |
+| name     | タグの名前 |
+
+返り値
+
+```js
+{
+	"status": "success"
+}
+```
+
+## /remove_tags
+登録したTagの削除  
+
+| key | explanation |
+|:-----------:|:------------:|
+| user_id       |  自分のID |
+| name     | タグの名前 |
+
+返り値
+
+```js
+{
+	"status": "success"
+}
+```

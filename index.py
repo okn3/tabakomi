@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify
 import pymysql.cursors
+from constants import TAGS
 
 app = Flask(__name__)
 
@@ -102,7 +103,6 @@ def get_near_location_users():
     cur.close()
     conn.commit()
     conn.close()
-    print(result)
     return jsonify(locations=result)
 
 
@@ -115,6 +115,46 @@ def push_yahho():
 
     cur.execute("INSERT INTO yahhos (name, position,pushing_user_id,pushed_user_id) VALUES (%s, GeomFromText('POINT(" + request.form['lat'] + " " + request.form['lng'] + ")')," + request.form['pushing_user_id'] + "," + request.form['pushed_user_id'] + ")", r['name'])
 
+    cur.close()
+    conn.commit()
+    conn.close()
+    return jsonify(status='success')
+
+
+@app.route('/get_tags', methods=["POST"])
+def get_tags():
+    conn = connect_db()
+    cur = conn.cursor()
+    cur.execute("SELECT * from user_tags where user_id = %s",
+                (request.form['user_id'],))
+    result = cur.fetchall()
+    cur.close()
+    conn.commit()
+    conn.close()
+    user_tags = []
+    for r in result:
+        user_tags.append(r['name'])
+    return jsonify(tags=TAGS, user_tags=user_tags)
+
+
+@app.route('/set_tag', methods=["POST"])
+def set_tag():
+    conn = connect_db()
+    cur = conn.cursor()
+    cur.execute("INSERT INTO user_tags (user_id, name) VALUES (%s, %s)",
+                (request.form['user_id'], request.form['name']))
+    cur.close()
+    conn.commit()
+    conn.close()
+    return jsonify(status='success')
+
+
+@app.route('/remove_tag', methods=["POST"])
+def remove_tag():
+    conn = connect_db()
+    cur = conn.cursor()
+    cur.execute("DELETE FROM user_tags WHERE user_id = %s and name = %s",
+                (request.form['user_id'], request.form['name']))
     cur.close()
     conn.commit()
     conn.close()
