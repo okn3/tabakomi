@@ -3,6 +3,9 @@
 ```zsh
 pip3 install flask
 pip3 install PyMySQL3
+pip3 install tweepy
+pip3 install JpTokenPreprocessing
+pip3 install mecab-python
 ```
 
 
@@ -19,14 +22,42 @@ pip3 install PyMySQL3
 返り値例
 
 - 対象ユーザがいた場合
+	- Twitterデータなし
 
 ```js
 {
 	"result":{
 		"id": 53,
 		"name": "hogee",
-		"twitter": "taka_say",
-		"comment": "hello world!"
+		"screen_name": "",
+		"comment": "hello world!",
+		"twitetr": ""
+	}
+}
+```
+
+- 対象ユーザがいた場合
+	- Twitterデータあり
+
+```js
+{
+	"result":{
+		"comment": "hello world!",
+		"id": 53,
+		"name": "hogee",
+		"screen_name": "taka_say",
+		"twitetr":[
+			"Memo",
+			"Flask",
+			"Python",
+			"ルイズ",
+			"文字",
+			"Android",
+			"アニメ",
+			"エディタ",
+			"Vivaldi",
+			"英語"
+		]
 	}
 }
 ```
@@ -256,3 +287,6 @@ iBeacon範囲内から出た時
 	"status": "success"
 }
 ```
+
+# Caution
+Twitter related file isn't pushed.

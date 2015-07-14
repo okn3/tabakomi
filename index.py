@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify
+from freq_word import analyze
 import pymysql.cursors
 
 app = Flask(__name__)
@@ -15,15 +16,16 @@ def hello_world():
 def get_user():
     conn = connect_db()
     cur = conn.cursor()
-
-    cur.execute("SELECT id, name, twitter, comment from users where " + request.form['user_id'] + " = id")
+    cur.execute("SELECT id, name, twitter as screen_name, comment from users where " + request.form['user_id'] + " = id")
     result = cur.fetchone()
-
     cur.close()
     conn.commit()
     conn.close()
+
     if result is None:
         return jsonify(result='')
+    print(result)
+    result['twitetr'] = analyze(result['screen_name'])
     return jsonify(result=result)
 
 
