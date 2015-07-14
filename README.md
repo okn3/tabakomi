@@ -224,3 +224,35 @@ Yahho送信
 	"status": "success"
 }
 ```
+
+
+## /enter_ibeacon
+iBeacon範囲内に入った時
+
+| key | explanation |
+|:-----------:|:------------:|
+| user_id       |  自分のID |
+
+返り値
+
+```js
+{
+	"status": "success"
+}
+```
+
+
+## /exit_ibeacon
+iBeacon範囲内から出た時
+
+| key | explanation |
+|:-----------:|:------------:|
+| user_id       |  自分のID |
+
+返り値
+
+```js
+{
+	"status": "success"
+}
+```

@@ -159,6 +159,30 @@ def remove_tag():
     conn.close()
     return jsonify(status='success')
 
+
+@app.route('/enter_ibeacon', methods=["POST"])
+def enter_ibeacon():
+    conn = connect_db()
+    cur = conn.cursor()
+    cur.execute("INSERT INTO ibeacons (user_id) VALUES (%s)",
+                (request.form['user_id'],))
+    cur.close()
+    conn.commit()
+    conn.close()
+    return jsonify(status='success')
+
+
+@app.route('/exit_ibeacon', methods=["POST"])
+def exit_ibeacon():
+    conn = connect_db()
+    cur = conn.cursor()
+    cur.execute("DELETE FROM ibeacons WHERE user_id = %s",
+                (request.form['user_id'],))
+    cur.close()
+    conn.commit()
+    conn.close()
+    return jsonify(status='success')
+
 TAGS = ['スポーツ', 'ゲーム', 'ラーメン', '車', 'バイク', 'タバコ', 'IT',
         'アニメ', 'ルイズ', 'ゼロの使い魔']
 
