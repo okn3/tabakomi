@@ -186,7 +186,7 @@ def exit_ibeacon():
     return jsonify(status='success')
 
 
-@app.route('/get_ibeacons', methods=["POST"])
+@app.route('/get_ibeacons')
 def get_ibeacons():
     conn = connect_db()
     cur = conn.cursor()

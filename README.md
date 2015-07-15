@@ -290,7 +290,8 @@ iBeacon範囲内から出た時
 
 
 ## /get_ibeacons
-iBeacon範囲内にいるユーザの取得
+iBeacon範囲内にいるユーザの取得  
+(Getリクエスト)
 
 | key | explanation |
 |:-----------:|:------------:|
