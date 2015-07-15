@@ -288,5 +288,29 @@ iBeacon範囲内から出た時
 }
 ```
 
+
+## /get_ibeacons
+iBeacon範囲内にいるユーザの取得
+
+| key | explanation |
+|:-----------:|:------------:|
+
+返り値
+
+```js
+{
+	"result":[
+		{
+			"name": "fuga",
+			"user_id": 1
+		},
+		{
+			"name": "hoge",
+			"user_id": 52
+		}
+	]
+}
+```
+
 # Caution
 Twitter related file isn't pushed.

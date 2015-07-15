@@ -185,6 +185,18 @@ def exit_ibeacon():
     conn.close()
     return jsonify(status='success')
 
+
+@app.route('/get_ibeacons', methods=["POST"])
+def get_ibeacons():
+    conn = connect_db()
+    cur = conn.cursor()
+    cur.execute("SELECT user_id, name from ibeacons LEFT JOIN users ON ibeacons.user_id = users.id")
+    result = cur.fetchall()
+    cur.close()
+    conn.commit()
+    conn.close()
+    return jsonify(result=result)
+
 TAGS = ['スポーツ', 'ゲーム', 'ラーメン', '車', 'バイク', 'タバコ', 'IT',
         'アニメ', 'ルイズ', 'ゼロの使い魔']
 
