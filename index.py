@@ -18,14 +18,23 @@ def get_user():
     cur = conn.cursor()
     cur.execute("SELECT id, name, twitter as screen_name, comment from users where " + request.form['user_id'] + " = id")
     result = cur.fetchone()
+
+    cur.execute("SELECT * from user_tags where user_id = %s",
+                (request.form['user_id'],))
+    tag_result = cur.fetchall()
     cur.close()
     conn.commit()
     conn.close()
 
     if result is None:
         return jsonify(result='')
-    print(result)
-    result['twitetr'] = analyze(result['screen_name'])
+    result['twitter'] = analyze(result['screen_name'])
+
+    tags = []
+    for r in tag_result:
+        tags.append(r['name'])
+    result['tags'] = tags
+
     return jsonify(result=result)
 
 

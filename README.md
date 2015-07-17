@@ -31,7 +31,11 @@ pip3 install mecab-python
 		"name": "hogee",
 		"screen_name": "",
 		"comment": "hello world!",
-		"twitetr": ""
+		"twitetr": "",
+		"tags": [
+			"スポーツ",
+			"ゼロの使い魔"
+		]
 	}
 }
 ```
@@ -57,6 +61,10 @@ pip3 install mecab-python
 			"エディタ",
 			"Vivaldi",
 			"英語"
+		],
+		"tags": [
+			"スポーツ",
+			"ゼロの使い魔"
 		]
 	}
 }
@@ -315,3 +323,5 @@ iBeacon範囲内にいるユーザの取得
 
 # Caution
 Twitter related file isn't pushed.
+
+Please excecute on root directory.
