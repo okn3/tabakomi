@@ -87,7 +87,8 @@ def post_location():
 
     cur.execute("SELECT * , X(position) AS lng, Y(position) AS lat FROM yahhos WHERE pushed_user_id = " + request.form['user_id'])
     result = cur.fetchone()
-    cur.execute("DELETE FROM yahhos WHERE id = %s", (result['id'],))
+    if result is not None:
+        cur.execute("DELETE FROM yahhos WHERE id = %s", (result['id'],))
 
     cur.close()
     conn.commit()
