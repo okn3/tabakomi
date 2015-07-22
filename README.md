@@ -139,14 +139,32 @@ pip3 install mecab-python
 ```js
 {
 	"result":{
-		"id": 4,
-		"lat": 140,
-		"lng": 39,
-		"modified": "Thu, 09 Jul 2015 15:30:05 GMT",
-		"name": "hoge",
-		"position": null,
-		"pushed_user_id": 53,
-		"pushing_user_id": 52
+		"id": 34,  // yahho id
+		"lat": 40,
+		"lng": 140,
+		"name": "hogee",
+		"pushed_user_id": 109,  // yahhoの対象
+		"pushing_user_id": 53,  // yahhoしてきた相手のid
+		"reply": 0,  // 返信かどうか 0 => 初めて, 1 => 返信
+		"screen_name": "taka_say",
+		// tagが登録されている場合
+		"tags":[
+			"ゼロの使い魔",
+			"ルイズ"
+		],
+		// twitter_idが登録されている場合
+		"twitter":[
+			"Flask",
+			"ルイズ",
+			"Python",
+			"Vivaldi",
+			"文字",
+			"エディタ",
+			"アニメ",
+			"英語",
+			"Android",
+			"やる気"
+		]
 	}
 }
 ```
@@ -184,12 +202,13 @@ pip3 install mecab-python
 ## /push_yahho
 Yahho送信
 
-| key | explanation |
-|:-----------:|:------------:|
-| lat       |  緯度 |
-| lng     | 経度 |
-| pushing\_user\_id  |  YahhoをしたユーザのID（端末側） |
-| pushed\_user\_id     | Yahho対象のユーザID（ピン側） |
+|        key        |           explanation           |
+| :---------------: | :-----------------------------: |
+|        lat        |               緯度              |
+|        lng        |               経度              |
+| pushing\_user\_id | YahhoをしたユーザのID（端末側） |
+|  pushed\_user\_id |  Yahho対象のユーザID（ピン側）  |
+|       reply       |       返信のYahhoかどうか（通常時は設定不要,返信の場合は1をいれる）   |
 
 返り値
 

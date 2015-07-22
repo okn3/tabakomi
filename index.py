@@ -85,19 +85,32 @@ def post_location():
     conn = connect_db()
     cur = conn.cursor()
 
-    cur.execute("SELECT * , X(position) AS lng, Y(position) AS lat FROM yahhos WHERE pushed_user_id = " + request.form['user_id'])
+    cur.execute("SELECT yahhos.id AS id, X(position) AS lng, Y(position) AS lat, users.name, twitter as screen_name,  pushed_user_id, pushing_user_id, reply FROM yahhos LEFT JOIN users ON yahhos.pushing_user_id = users.id WHERE pushed_user_id = " + request.form['user_id'])
     result = cur.fetchone()
     if result is not None:
         cur.execute("DELETE FROM yahhos WHERE id = %s", (result['id'],))
 
+    if result is None:
+        cur.close()
+        conn.commit()
+        conn.close
+        return jsonify(result='')
+
+    cur.execute("SELECT * from user_tags where user_id = %s",
+                (result['pushing_user_id'],))
+    tag_result = cur.fetchall()
     cur.close()
     conn.commit()
     conn.close
 
-    if result is not None:
-        return jsonify(result=result)
-    else:
-        return jsonify(result="")
+    result['twitter'] = analyze(result['screen_name'])
+
+    tags = []
+    for r in tag_result:
+        tags.append(r['name'])
+    result['tags'] = tags
+
+    return jsonify(result=result)
 
 
 @app.route('/get_near_location_users', methods=["POST"])
@@ -124,7 +137,11 @@ def push_yahho():
     cur.execute("SELECT id, name from users where " + request.form['pushing_user_id'] + " = id")
     r = cur.fetchone()
 
-    cur.execute("INSERT INTO yahhos (name, position,pushing_user_id,pushed_user_id) VALUES (%s, GeomFromText('POINT(" + request.form['lat'] + " " + request.form['lng'] + ")')," + request.form['pushing_user_id'] + "," + request.form['pushed_user_id'] + ")", r['name'])
+    print("reply" in request.form)
+    if "reply" in request.form:
+        cur.execute("INSERT INTO yahhos (name, position,pushing_user_id,pushed_user_id,reply) VALUES (%s, GeomFromText('POINT(" + request.form['lat'] + " " + request.form['lng'] + ")')," + request.form['pushing_user_id'] + "," + request.form['pushed_user_id'] + ", true)", r['name'])
+    else:
+        cur.execute("INSERT INTO yahhos (name, position,pushing_user_id,pushed_user_id) VALUES (%s, GeomFromText('POINT(" + request.form['lat'] + " " + request.form['lng'] + ")')," + request.form['pushing_user_id'] + "," + request.form['pushed_user_id'] + ")", r['name'])
 
     cur.close()
     conn.commit()
