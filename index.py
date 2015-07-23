@@ -85,7 +85,7 @@ def post_location():
     conn = connect_db()
     cur = conn.cursor()
 
-    cur.execute("SELECT yahhos.id AS id, X(position) AS lng, Y(position) AS lat, users.name, twitter as screen_name,  pushed_user_id, pushing_user_id, reply FROM yahhos LEFT JOIN users ON yahhos.pushing_user_id = users.id WHERE pushed_user_id = " + request.form['user_id'])
+    cur.execute("SELECT yahhos.id AS id, X(position) AS lng, Y(position) AS lat, users.name, comment, twitter as screen_name,  pushed_user_id, pushing_user_id, reply FROM yahhos LEFT JOIN users ON yahhos.pushing_user_id = users.id WHERE pushed_user_id = " + request.form['user_id'])
     result = cur.fetchone()
     if result is not None:
         cur.execute("DELETE FROM yahhos WHERE id = %s", (result['id'],))

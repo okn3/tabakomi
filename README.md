@@ -147,6 +147,7 @@ pip3 install mecab-python
 		"pushing_user_id": 53,  // yahhoしてきた相手のid
 		"reply": 0,  // 返信かどうか 0 => 初めて, 1 => 返信
 		"screen_name": "taka_say",
+		"comment": "hello world!",
 		// tagが登録されている場合
 		"tags":[
 			"ゼロの使い魔",
