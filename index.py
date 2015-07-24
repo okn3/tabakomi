@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify
 from freq_word import analyze
+from freq_word import get_user_profile_image
 import pymysql.cursors
 import random
 
@@ -61,16 +62,23 @@ def register_user():
 def register_profile():
     conn = connect_db()
     cur = conn.cursor()
+    image = None
     if request.form['twitter'] is not None:
         twitter = request.form['twitter']
+        image = get_user_profile_image(twitter)
     else:
         twitter = ''
     if request.form['comment'] is not None:
         comment = request.form['comment']
     else:
         comment = ''
-    cur.execute("UPDATE users SET twitter = %s, comment = %s WHERE id = %s",
-                (twitter, comment, request.form['user_id']))
+
+    if image is None:
+        cur.execute("UPDATE users SET twitter = %s, comment = %s WHERE id = %s",
+                    (twitter, comment, request.form['user_id']))
+    else:
+        cur.execute("UPDATE users SET twitter = %s, comment = %s, image = %s WHERE id = %s",
+                    (twitter, comment, image, request.form['user_id']))
     conn.commit()
     cur.close()
     conn.close
