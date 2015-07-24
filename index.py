@@ -205,8 +205,14 @@ def remove_tag():
 def enter_ibeacon():
     conn = connect_db()
     cur = conn.cursor()
-    cur.execute("INSERT INTO ibeacons (user_id) VALUES (%s)",
-                (request.form['user_id'],))
+    major = request.form['major'] if 'major' in request.form else ''
+    if major == '':
+        major = None
+    minor = request.form['minor'] if 'minor' in request.form else ''
+    if minor == '':
+        minor = None
+    cur.execute("INSERT INTO ibeacons (user_id, uuid, major, minor) VALUES (%s, %s, %s, %s)",
+                (request.form['user_id'], request.form['uuid'], major, minor))
     cur.close()
     conn.commit()
     conn.close()
@@ -225,11 +231,18 @@ def exit_ibeacon():
     return jsonify(status='success')
 
 
-@app.route('/get_ibeacons')
+@app.route('/get_ibeacons', methods=["POST"])
 def get_ibeacons():
     conn = connect_db()
     cur = conn.cursor()
-    cur.execute("SELECT user_id, name from ibeacons LEFT JOIN users ON ibeacons.user_id = users.id")
+    major = request.form['major'] if 'major' in request.form else ''
+    if major == '':
+        major = None
+    minor = request.form['minor'] if 'minor' in request.form else ''
+    if minor == '':
+        minor = None
+    cur.execute("SELECT user_id, name, comment, sex, image from ibeacons LEFT JOIN users ON ibeacons.user_id = users.id WHERE user_id != %s and uuid = %s and major = %s and minor = %s",
+                (request.form['user_id'], request.form['uuid'], major, minor))
     result = cur.fetchall()
     cur.close()
     conn.commit()

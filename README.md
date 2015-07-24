@@ -312,6 +312,9 @@ iBeacon範囲内に入った時
 | key | explanation |
 |:-----------:|:------------:|
 | user_id       |  自分のID |
+| uuid       |  iBeaconのuuid |
+| major       |  iBeaconのmajor値 |
+| minor       |  iBeaconのminor値 |
 
 返り値
 
@@ -344,6 +347,10 @@ iBeacon範囲内にいるユーザの取得
 
 | key | explanation |
 |:-----------:|:------------:|
+| user_id       |  自分のID |
+| uuid       |  iBeaconのuuid |
+| major       |  iBeaconのmajor値 |
+| minor       |  iBeaconのminor値 |
 
 返り値
 
@@ -351,12 +358,18 @@ iBeacon範囲内にいるユーザの取得
 {
 	"result":[
 		{
-			"name": "fuga",
-			"user_id": 1
+			"user_id": 113,
+			"name": "chinko2",
+			"sex": 0,
+			"comment": "chiko dashichau yooooooo",
+			"image": "http://pbs.twimg.com/profile_images/542757120005787648/t5TKVRcm_normal.jpeg"
 		},
 		{
-			"name": "hoge",
-			"user_id": 52
+			"user_id": 115,
+			"name": "unkokko",
+			"sex": 1,
+			"comment": "unko morechau kamo!",
+			"image": "http://abs.twimg.com/sticky/default_profile_images/default_profile_2_200x200.png"
 		}
 	]
 }
