@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 from freq_word import analyze
 import pymysql.cursors
+import random
 
 app = Flask(__name__)
 
@@ -40,9 +41,12 @@ def get_user():
 
 @app.route('/register_user', methods=["POST"])
 def register_user():
+    image = 'http://abs.twimg.com/sticky/default_profile_images/default_profile_' + \
+            str(random.randint(0, 6)) + '_200x200.png'
     conn = connect_db()
     cur = conn.cursor()
-    cur.execute("INSERT INTO users (name, password) VALUES ('" + request.form['name'] + "', '" + request.form['password'] + "')")
+    cur.execute("INSERT INTO users (name, password, image, sex) VALUES (%s, %s, %s, %s)",
+                (request.form['name'], request.form['password'], image, request.form['sex']))
     conn.commit()
     cur.execute("SELECT id FROM users WHERE name = '" + request.form['name'] + "' and password = '" + request.form['password'] + "'")
     user = cur.fetchone()
