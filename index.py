@@ -18,7 +18,7 @@ def hello_world():
 def get_user():
     conn = connect_db()
     cur = conn.cursor()
-    cur.execute("SELECT id, name, twitter as screen_name, comment from users where " + request.form['user_id'] + " = id")
+    cur.execute("SELECT id, name, twitter as screen_name, comment, sex, image from users where " + request.form['user_id'] + " = id")
     result = cur.fetchone()
 
     cur.execute("SELECT * from user_tags where user_id = %s",
@@ -97,7 +97,7 @@ def post_location():
     conn = connect_db()
     cur = conn.cursor()
 
-    cur.execute("SELECT yahhos.id AS id, X(position) AS lng, Y(position) AS lat, users.name, comment, twitter as screen_name,  pushed_user_id, pushing_user_id, reply FROM yahhos LEFT JOIN users ON yahhos.pushing_user_id = users.id WHERE pushed_user_id = " + request.form['user_id'])
+    cur.execute("SELECT yahhos.id AS id, X(position) AS lng, Y(position) AS lat, users.name, comment, twitter as screen_name,  pushed_user_id, pushing_user_id, reply, sex, image FROM yahhos LEFT JOIN users ON yahhos.pushing_user_id = users.id WHERE pushed_user_id = " + request.form['user_id'])
     result = cur.fetchone()
     if result is not None:
         cur.execute("DELETE FROM yahhos WHERE id = %s", (result['id'],))
@@ -134,7 +134,7 @@ def get_near_location_users():
     lng1 = str(float(request.form['lng']) - RANGE)
     lat2 = str(float(request.form['lat']) - RANGE)
     lng2 = str(float(request.form['lng']) + RANGE)
-    cur.execute("SELECT name, user_id, Y(position) as lat, X(position) as lng from locations LEFT JOIN users ON locations.user_id = users.id where user_id != " + request.form['user_id'] + " and MBRContains(GeomFromText('LINESTRING(" + lng1 +" " + lat1 + ","  +  lng2 + " " + lat2 + ")'), position)")
+    cur.execute("SELECT name, user_id, Y(position) as lat, X(position) as lng, sex, image from locations LEFT JOIN users ON locations.user_id = users.id where user_id != " + request.form['user_id'] + " and MBRContains(GeomFromText('LINESTRING(" + lng1 +" " + lat1 + ","  +  lng2 + " " + lat2 + ")'), position)")
     result = cur.fetchall()
     cur.close()
     conn.commit()

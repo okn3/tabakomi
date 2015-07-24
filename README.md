@@ -31,6 +31,8 @@ pip3 install mecab-python
 		"name": "hogee",
 		"screen_name": "",
 		"comment": "hello world!",
+		"image": "http://pbs.twimg.com/profile_images/542757120005787648/t5TKVRcm_normal.jpeg",
+		"sex": 0,
 		"twitetr": "",
 		"tags": [
 			"スポーツ",
@@ -46,10 +48,12 @@ pip3 install mecab-python
 ```js
 {
 	"result":{
-		"comment": "hello world!",
 		"id": 53,
 		"name": "hogee",
 		"screen_name": "taka_say",
+		"comment": "hello world!",
+		"image": "http://pbs.twimg.com/profile_images/542757120005787648/t5TKVRcm_normal.jpeg",
+		"sex": 0,
 		"twitetr":[
 			"Memo",
 			"Flask",
@@ -149,6 +153,8 @@ pip3 install mecab-python
 		"reply": 0,  // 返信かどうか 0 => 初めて, 1 => 返信
 		"screen_name": "taka_say",
 		"comment": "hello world!",
+		"image": "http://pbs.twimg.com/profile_images/542757120005787648/t5TKVRcm_normal.jpeg",
+		"sex": 0,
 		// tagが登録されている場合
 		"tags":[
 			"ゼロの使い魔",
@@ -187,8 +193,22 @@ pip3 install mecab-python
 ```js
 {
 	"locations":[
-		{"lat": 39, "lng": 140, "name": "fuga", "user_id": 1},
-		{"lat": 39, "lng": 140, "name": "piyo", "user_id": 100}
+		{
+			"user_id": 112,
+			"name": "chinko",
+			"sex": 1,
+			"lat": 39.90218401,
+			"lng": 140.1029481,
+			"image": "http://abs.twimg.com/sticky/default_profile_images/default_profile_2_200x200.png"
+		},
+		{
+			"user_id": 113,
+			"name": "chinko2",
+			"sex": 0,
+			"lat": 39,
+			"lng": 140,
+			"image": "http://pbs.twimg.com/profile_images/542757120005787648/t5TKVRcm_normal.jpeg"
+		}
 	]
 }
 ```
