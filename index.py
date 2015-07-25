@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify
 from freq_word import analyze
 from freq_word import get_user_profile_image
 from freq_word import get_trends_from_latlng
+from freq_word import post_tweet
 import pymysql.cursors
 import random
 
@@ -253,11 +254,44 @@ def get_ibeacons():
 
 @app.route('/get_trends', methods=["POST"])
 def get_trends():
-    if 'lat' in request.form:
+    if 'lat' in request.form and 'lng' in request.form:
         trends = get_trends_from_latlng(request.form['lat'], request.form['lng'])
     else:
         trends = get_trends_from_latlng()
     return jsonify(trends=trends)
+
+
+@app.route('/post_photo', methods=["POST"])
+def post_photo():
+    conn = connect_db()
+    cur = conn.cursor()
+    cur.execute("SELECT id, name, twitter as screen_name from users where id = %s OR id = %s",
+                (request.form['user_id1'], request.form['user_id2']))
+    u1 = cur.fetchone()
+    u2 = cur.fetchone()
+    cur.close()
+    conn.commit()
+    conn.close()
+    name1 = u1['name'] if u1['screen_name'] == '' else '@' + u1['screen_name']
+    name2 = u2['name'] if u2['screen_name'] == '' else '@' + u2['screen_name']
+    if 'lat' in request.form and 'lng' in request.form:
+        url = post_tweet(filename=request.files['photo'].filename,
+                         filedata=request.files['photo'].stream,
+                         name1=name1, name2=name2,
+                         lat=request.form['lat'], lng=request.form['lng'])
+    else:
+        url = post_tweet(filename=request.files['photo'].filename,
+                         filedata=request.files['photo'].stream,
+                         name1=name1, name2=name2)
+
+    conn = connect_db()
+    cur = conn.cursor()
+    cur.execute("INSERT INTO photos (user_id1, user_id2, url) VALUES (%s, %s, %s)",
+                (request.form['user_id1'], request.form['user_id2'], url))
+    cur.close()
+    conn.commit()
+    conn.close()
+    return jsonify(url=url)
 
 
 TAGS = ['ゼロの使い魔', 'ルイズ', 'ヤマグチノボル', '珈琲貴族', '黒髪', '桃髪', '貧乳', '太もも',

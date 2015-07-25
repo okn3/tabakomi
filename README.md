@@ -361,14 +361,14 @@ iBeacon範囲内にいるユーザの取得
 			"name": "chinko2",
 			"sex": 0,
 			"comment": "chiko dashichau yooooooo",
-			"image": "http://pbs.twimg.com/profile_images/542757120005787648/t5TKVRcm_normal.jpeg"
+			"image": "http://pbs.twimg.com/profile_images/542757120005787648/t5TKVRcm_bigger.jpeg"
 		},
 		{
 			"user_id": 115,
 			"name": "unkokko",
 			"sex": 1,
 			"comment": "unko morechau kamo!",
-			"image": "http://abs.twimg.com/sticky/default_profile_images/default_profile_2_200x200.png"
+			"image": "http://abs.twimg.com/sticky/default_profile_images/default_profile_2_bigger.png"
 		}
 	]
 }
@@ -402,6 +402,24 @@ iBeacon範囲内にいるユーザの取得
 }
 ```
 
+
+## /post_photo
+写真を投稿し、Twitterにアップロード後、つぶやく
+
+| key | explanation |
+|:-----------:|:------------:|
+| user_id1       |  自分のID |
+| user_id2       |  相手のID |
+| lat       |  緯度（省略可） |
+| lng       |  経度（省略可） |
+
+返り値
+
+```js
+{
+	"url": "http://twitter.com/TwittemSSI/status/624919189338243072/photo/1"
+}
+```
 
 
 # Caution
