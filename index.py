@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 from freq_word import analyze
 from freq_word import get_user_profile_image
+from freq_word import get_trends_from_latlng
 import pymysql.cursors
 import random
 
@@ -43,7 +44,7 @@ def get_user():
 @app.route('/register_user', methods=["POST"])
 def register_user():
     image = 'http://abs.twimg.com/sticky/default_profile_images/default_profile_' + \
-            str(random.randint(0, 6)) + '_200x200.png'
+            str(random.randint(0, 6)) + '_bigger.png'
     conn = connect_db()
     cur = conn.cursor()
     cur.execute("INSERT INTO users (name, password, image, sex) VALUES (%s, %s, %s, %s)",
@@ -249,8 +250,18 @@ def get_ibeacons():
     conn.close()
     return jsonify(result=result)
 
-TAGS = ['スポーツ', 'ゲーム', 'ラーメン', '車', 'バイク', 'タバコ', 'IT',
-        'アニメ', 'ルイズ', 'ゼロの使い魔']
+
+@app.route('/get_trends', methods=["POST"])
+def get_trends():
+    if 'lat' in request.form:
+        trends = get_trends_from_latlng(request.form['lat'], request.form['lng'])
+    else:
+        trends = get_trends_from_latlng()
+    return jsonify(trends=trends)
+
+
+TAGS = ['ゼロの使い魔', 'ルイズ', 'ヤマグチノボル', '珈琲貴族', '黒髪', '桃髪', '貧乳', '太もも',
+        'ゼロ魔', 'ゼロ使']
 
 HOST = '133.2.37.129'
 # HOST = 'localhost'
