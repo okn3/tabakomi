@@ -404,7 +404,8 @@ iBeacon範囲内にいるユーザの取得
 
 
 ## /post_photo
-写真を投稿し、Twitterにアップロード後、つぶやく
+写真を投稿し、Twitterにアップロード後、つぶやく  
+（Content-Type：multipart/form-dataで送信）
 
 | key | explanation |
 |:-----------:|:------------:|
@@ -412,6 +413,7 @@ iBeacon範囲内にいるユーザの取得
 | user_id2       |  相手のID |
 | lat       |  緯度（省略可） |
 | lng       |  経度（省略可） |
+| photo       |  写真のデータ |
 
 返り値
 
